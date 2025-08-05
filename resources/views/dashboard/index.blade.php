@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proximity Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
         body { font-family: sans-serif; max-width: 600px; margin: 2em auto; }
         .container { border: 1px solid #eee; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -77,7 +79,7 @@
         </form>
 
         <hr>
-
+        <div id="map" style="height: 400px; width: 100%; margin-bottom: 2em; border-radius: 8px;"></div>
         <h2>Recent Proximity Checks</h2>
         @if($logs->isEmpty())
             <p style="text-align: center;">No proximity checks have been logged yet.</p>
@@ -112,6 +114,47 @@
             </table>
         @endif
     </div>
+
+    <script>
+        // --- 1. Define Coordinates (using data from PHP) ---
+
+        // Get warehouse coordinates. We check the session first for after a redirect,
+        // otherwise we use the variable passed on initial page load.
+        const warehouseCoords = [
+            {{ session('warehouse_coords_for_map.0') ?? $warehouseCoords[0] }},
+            {{ session('warehouse_coords_for_map.1') ?? $warehouseCoords[1] }}
+        ];
+
+        // Get the last delivery coordinates from the session data, if it exists
+        // Otherwise, default to the warehouse location so the map doesn't break
+        const deliveryCoords = [
+            {{ session('proximity_data.delivery.0') ?? $warehouseCoords[0] }},
+            {{ session('proximity_data.delivery.1') ?? $warehouseCoords[1] }}
+        ];
+
+        // --- 2. Initialize the Map ---
+        const map = L.map('map').setView(warehouseCoords, 15);
+
+        // --- 3. Add the Tile Layer ---
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // --- 4. Add Markers ---
+        const warehouseMarker = L.marker(warehouseCoords).addTo(map)
+            .bindPopup('<b>Warehouse Location</b>');
+
+        // Only add the delivery marker if a check has been performed
+        @if(session('proximity_data'))
+            const deliveryMarker = L.marker(deliveryCoords).addTo(map)
+                .bindPopup('<b>Last Delivery Location</b>');
+
+            // --- 5. Fit Map to Markers ---
+            const group = new L.featureGroup([warehouseMarker, deliveryMarker]);
+            map.fitBounds(group.getBounds().pad(0.5));
+        @endif
+    </script>
 
 </body>
 </html>
