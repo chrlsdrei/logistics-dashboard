@@ -10,12 +10,10 @@
 </head>
 <body class="bg-zumthor-50 min-h-screen">
     <div class="flex h-screen">
-        <!-- Map Section (flexible width - takes remaining space) -->
         <div class="flex-1 h-full">
             <div id="map" class="w-full h-full"></div>
         </div>
 
-        <!-- Sidebar Section (fixed width to accommodate table) -->
         <div class="w-96 h-full bg-white shadow-lg overflow-y-auto">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-zumthor-900 mb-6 text-center">Proximity Dashboard</h1>
@@ -117,7 +115,6 @@
         </div>
     </div>
 
-    <!-- Data attributes to pass coordinates to JavaScript -->
     <div id="map-data"
          data-warehouse-lat="{{ session('warehouse_coords_for_map.0') ?? $warehouseCoords[0] }}"
          data-warehouse-lng="{{ session('warehouse_coords_for_map.1') ?? $warehouseCoords[1] }}"
