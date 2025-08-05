@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProximityLog; // <-- Make sure this is imported
+use App\Models\ProximityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class ProximityAlertController extends Controller
 {
+    // Warehouse coordinates
+    private $warehouseCoords = [14.5995, 120.9842];
+
     /**
      * Show the main dashboard page.
-     * This is the missing method.
      */
     public function index()
     {
@@ -18,7 +20,8 @@ class ProximityAlertController extends Controller
 
         return view('dashboard.index', [
             'logs' => $logs,
-            'data' => null
+            'data' => null,
+            'warehouseCoords' => $this->warehouseCoords
         ]);
     }
 
@@ -44,6 +47,13 @@ class ProximityAlertController extends Controller
 
         $data = $response->json();
 
+        if ($data) {
+            $data['delivery'] = [
+                (float)$validated['lat'],
+                (float)$validated['lng']
+            ];
+        }
+
         if ($data && isset($data['distance'])) {
             ProximityLog::create([
                 'delivery_lat' => $validated['lat'],
@@ -57,6 +67,7 @@ class ProximityAlertController extends Controller
         $logs = ProximityLog::latest()->take(10)->get();
 
         return redirect()->route('dashboard')
-                 ->with('proximity_data', $data);
+                 ->with('proximity_data', $data)
+                 ->with('warehouseCoords', $this->warehouseCoords);
     }
 }
