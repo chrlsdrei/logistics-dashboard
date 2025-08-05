@@ -8,4 +8,16 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zumthor-50: #ebf5ff;
+    --color-zumthor-100: #dbecfe;
+    --color-zumthor-200: #bfdffe;
+    --color-zumthor-300: #93ccfd;
+    --color-zumthor-400: #60affa;
+    --color-zumthor-500: #3b8ef6;
+    --color-zumthor-600: #256feb;
+    --color-zumthor-700: #1d5ad8;
+    --color-zumthor-800: #1e49af;
+    --color-zumthor-900: #1e418a;
+    --color-zumthor-950: #172954;
 }
