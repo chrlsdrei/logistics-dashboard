@@ -12,6 +12,20 @@ function initializeMap() {
     const mapData = document.getElementById('map-data');
     if (!mapData) return;
 
+    const warehouseIcon = L.icon({
+        iconUrl: 'https://icons.iconarchive.com/icons/double-j-design/origami-colored-pencil/256/red-home-icon.png',
+        iconSize:     [42, 42],
+        iconAnchor:   [16, 16],
+        popupAnchor:  [0, -32]
+    });
+
+    const deliveryIcon = L.icon({
+        iconUrl: 'https://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/truck-icon.png',
+        iconSize:     [42, 42],
+        iconAnchor:   [16, 16],
+        popupAnchor:  [0, -32]
+    });
+
     const warehouseCoords = [
         parseFloat(mapData.dataset.warehouseLat),
         parseFloat(mapData.dataset.warehouseLng)
@@ -31,7 +45,7 @@ function initializeMap() {
         attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    const warehouseMarker = L.marker(warehouseCoords).addTo(map)
+    const warehouseMarker = L.marker(warehouseCoords, { icon: warehouseIcon }).addTo(map)
         .bindPopup('<b>Warehouse Location</b>');
 
     const featureGroupItems = [warehouseMarker];
@@ -39,7 +53,7 @@ function initializeMap() {
     const hasDeliveryData = deliveryCoords[0] !== warehouseCoords[0] || deliveryCoords[1] !== warehouseCoords[1];
 
     if (hasDeliveryData) {
-        const deliveryMarker = L.marker(deliveryCoords).addTo(map)
+        const deliveryMarker = L.marker(deliveryCoords, { icon: deliveryIcon }).addTo(map)
             .bindPopup('<b>Last Delivery Location</b>');
         featureGroupItems.push(deliveryMarker);
     }

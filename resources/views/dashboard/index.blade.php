@@ -14,7 +14,7 @@
             <div id="map" class="w-full h-full"></div>
         </div>
 
-        <div class="w-96 h-full bg-white shadow-lg overflow-y-auto">
+        <div class="w-116 h-full bg-white shadow-lg overflow-y-auto">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-zumthor-900 mb-6 text-center">Proximity Dashboard</h1>
 
@@ -111,9 +111,15 @@
                         </div>
                     @endif
                 </div>
+            <div class="mt-auto pt-4 border-t border-zumthor-200">
+                <a href="{{ route('deliveries') }}"
+                    class="w-full bg-zumthor-600 hover:bg-zumthor-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 text-center block">
+                    See Delivery List
+                </a>
             </div>
         </div>
     </div>
+</div>
 
     <div id="map-data"
          data-warehouse-lat="{{ session('warehouse_coords_for_map.0') ?? $warehouseCoords[0] }}"

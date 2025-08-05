@@ -25,6 +25,16 @@ class ProximityAlertController extends Controller
         ]);
     }
 
+    public function deliveries()
+    {
+        $deliveries = ProximityLog::latest()->paginate(20);
+
+        return view('dashboard.deliveries', [
+            'deliveries' => $deliveries,
+            'warehouseCoords' => $this->warehouseCoords
+        ]);
+    }
+
     /**
      * Check proximity, log it, and return to the dashboard with the result.
      */
