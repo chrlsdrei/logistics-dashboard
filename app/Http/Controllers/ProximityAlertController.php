@@ -52,6 +52,8 @@ class ProximityAlertController extends Controller
                 (float)$validated['lat'],
                 (float)$validated['lng']
             ];
+
+            $data['radius'] = $validated['radius'] ?? 250;
         }
 
         if ($data && isset($data['distance'])) {

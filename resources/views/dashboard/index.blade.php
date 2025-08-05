@@ -122,7 +122,8 @@
          data-warehouse-lat="{{ session('warehouse_coords_for_map.0') ?? $warehouseCoords[0] }}"
          data-warehouse-lng="{{ session('warehouse_coords_for_map.1') ?? $warehouseCoords[1] }}"
          data-delivery-lat="{{ session('proximity_data.delivery.0') ?? $warehouseCoords[0] }}"
-         data-delivery-lng="{{ session('proximity_data.delivery.1') ?? $warehouseCoords[1] }}">
+         data-delivery-lng="{{ session('proximity_data.delivery.1') ?? $warehouseCoords[1] }}"
+         data-radius="{{ session('proximity_data.radius') ?? 0 }}">
     </div>
 </body>
 </html>

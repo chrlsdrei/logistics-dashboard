@@ -9,41 +9,53 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeMap() {
-    // Get the data element
     const mapData = document.getElementById('map-data');
+    if (!mapData) return;
 
-    // Get warehouse coordinates from data attributes
     const warehouseCoords = [
-        parseFloat(mapData.dataset.warehouseLat) || 0,
-        parseFloat(mapData.dataset.warehouseLng) || 0
+        parseFloat(mapData.dataset.warehouseLat),
+        parseFloat(mapData.dataset.warehouseLng)
     ];
 
-    // Get the last delivery coordinates from data attributes
     const deliveryCoords = [
-        parseFloat(mapData.dataset.deliveryLat) || warehouseCoords[0],
-        parseFloat(mapData.dataset.deliveryLng) || warehouseCoords[1]
+        parseFloat(mapData.dataset.deliveryLat),
+        parseFloat(mapData.dataset.deliveryLng)
     ];
 
-    // Initialize the map
+    const radius = parseFloat(mapData.dataset.radius);
+
     const map = L.map('map').setView(warehouseCoords, 15);
 
-    // Add the tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // Add warehouse marker
     const warehouseMarker = L.marker(warehouseCoords).addTo(map)
         .bindPopup('<b>Warehouse Location</b>');
 
-    // Add delivery marker if coordinates exist and are different from warehouse
-    if (deliveryCoords[0] !== warehouseCoords[0] || deliveryCoords[1] !== warehouseCoords[1]) {
+    const featureGroupItems = [warehouseMarker];
+
+    const hasDeliveryData = deliveryCoords[0] !== warehouseCoords[0] || deliveryCoords[1] !== warehouseCoords[1];
+
+    if (hasDeliveryData) {
         const deliveryMarker = L.marker(deliveryCoords).addTo(map)
             .bindPopup('<b>Last Delivery Location</b>');
+        featureGroupItems.push(deliveryMarker);
+    }
 
-        // Fit map to markers
-        const group = new L.featureGroup([warehouseMarker, deliveryMarker]);
-        map.fitBounds(group.getBounds().pad(0.5));
+    if (radius > 0) {
+        const proximityCircle = L.circle(warehouseCoords, {
+            color: 'green',
+            fillColor: '#28a745',
+            fillOpacity: 0.2,
+            radius: radius
+        }).addTo(map);
+        featureGroupItems.push(proximityCircle);
+    }
+
+    if (featureGroupItems.length > 1) {
+        const group = new L.featureGroup(featureGroupItems);
+        map.fitBounds(group.getBounds().pad(0.2));
     }
 }
