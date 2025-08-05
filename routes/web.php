@@ -5,3 +5,4 @@ use App\Http\Controllers\ProximityAlertController;
 
 Route::get('/', [ProximityAlertController::class, 'index'])->name('dashboard');
 Route::post('/check-proximity', [ProximityAlertController::class, 'checkProximity'])->name('check.proximity');
+Route::get('/deliveries', [ProximityAlertController::class, 'deliveries'])->name('deliveries');
